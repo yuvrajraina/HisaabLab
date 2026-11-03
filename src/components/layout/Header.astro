@@ -23,9 +23,21 @@ const links = [
 <script>
   const button = document.querySelector<HTMLButtonElement>('.menu-button');
   const nav = document.querySelector<HTMLElement>('#primary-nav');
-  button?.addEventListener('click', () => {
-    const open = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', String(!open));
-    nav?.classList.toggle('open', !open);
+  const setMenuOpen = (open: boolean) => {
+    button?.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('open', open);
+  };
+  button?.addEventListener('click', () => setMenuOpen(button.getAttribute('aria-expanded') !== 'true'));
+  nav?.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).closest('a')) setMenuOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && button?.getAttribute('aria-expanded') === 'true') {
+      setMenuOpen(false);
+      button.focus();
+    }
+  });
+  document.addEventListener('click', (event) => {
+    if (button?.getAttribute('aria-expanded') === 'true' && !nav?.contains(event.target as Node) && !button.contains(event.target as Node)) setMenuOpen(false);
   });
 </script>
