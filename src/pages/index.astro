@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CalculatorSearch from '../components/common/CalculatorSearch';
+import CalculatorCard from '../components/common/CalculatorCard.astro';
+import { calculators, calculatorById } from '../data/calculators';
+
+const schema = [
+  { '@context':'https://schema.org','@type':'WebSite',name:'HisaabLab',description:'Free financial calculators built for India.',url:import.meta.env.PUBLIC_SITE_URL || undefined },
+  { '@context':'https://schema.org','@type':'Organization',name:'HisaabLab',url:import.meta.env.PUBLIC_SITE_URL || undefined }
+];
+const popular = calculators.slice(0,6);
+const decisions = ['home-loan-prepayment','rent-vs-buy','home-affordability'].map(id => calculatorById[id as keyof typeof calculatorById]);
+---
+<BaseLayout title="HisaabLab — Free Financial Calculators for India" description="Compare home loans, prepayments, rent vs buy, property costs and savings with clear, private financial calculators built for India." schema={schema}>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Money decisions, made clearer</span>
+        <h1>Make smarter decisions <span>with your money.</span></h1>
+        <p class="lead">Free financial calculators built for India. Compare home loans, property costs and savings—with clear results and no signup.</p>
+        <div class="hero-actions"><a class="button" href="/calculators/">Explore all calculators <span aria-hidden="true">→</span></a><a class="button secondary" href="/calculators/home-loan-emi/">Calculate an EMI</a></div>
+        <div class="quiet-proof"><span><i></i>100% free</span><span><i></i>No login</span><span><i></i>Your inputs stay on-device</span></div>
+        <CalculatorSearch calculators={calculators} client:load />
+      </div>
+      <div class="hero-visual" aria-label="Illustrative HisaabLab calculation dashboard">
+        <div class="dashboard-card"><div class="dash-top"><span>Illustrative monthly EMI</span><b>Live estimate</b></div><div class="dash-value">₹43,391</div><div class="dash-sub">₹50 lakh · 8.5% · 20 years</div><div class="mini-bars" aria-hidden="true">{[32,40,48,59,68,77,86,94,100].map(height=><i style={`height:${height}%`}></i>)}</div></div>
+        <div class="floating-note one"><span>Potential interest saved</span><strong>₹7.8 lakh</strong></div><div class="floating-note two"><span>Private by design</span><strong>No signup needed</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container"><div class="section-heading"><div><span class="eyebrow">Start with a number</span><h2>Popular calculators</h2></div><p>Understand the trade-off, not just the headline figure. Every tool shows assumptions, methods and limitations.</p><a href="/calculators/">View all 10 →</a></div><div class="card-grid">{popular.map(calculator=><CalculatorCard calculator={calculator} />)}</div></div>
+  </section>
+
+  <section class="section decision-strip">
+    <div class="container"><div class="section-heading"><div><span class="eyebrow">Decision tools</span><h2>When the question is bigger than a formula</h2></div><p>Compare complete scenarios across time—cash flow, interest, property equity and opportunity cost included.</p></div><div class="feature-grid">{decisions.map((item,index)=><article class="feature-card"><span>0{index+1} · {item.category}</span><h3>{index===0?'Should I prepay my home loan?':index===1?'Is renting better than buying?':'How much house can I afford?'}</h3><p>{item.summary}</p><a href={item.path}>Open decision tool →</a></article>)}</div></div>
+  </section>
+
+  <section class="section">
+    <div class="container how-grid"><div><span class="eyebrow">Our approach</span><h2>Built to explain the “why” behind the result.</h2><p class="lead">Financial tools should make assumptions visible. HisaabLab keeps the maths inspectable and the language human.</p><a class="button secondary" href="/about/">How calculations work</a></div><div class="steps"><article class="step"><span>1</span><div><h3>Use your own assumptions</h3><p>Rates, fees and growth inputs stay editable instead of pretending one market number fits everyone.</p></div></article><article class="step"><span>2</span><div><h3>Compare complete outcomes</h3><p>See cash flow, total interest, outstanding balance and opportunity cost—not just the smallest EMI.</p></div></article><article class="step"><span>3</span><div><h3>Understand the limits</h3><p>Every calculator documents its formula, timing convention, worked example and what it leaves out.</p></div></article></div></div>
+  </section>
+
+  <section class="section" style="background:#fff">
+    <div class="container"><div class="section-heading"><div><span class="eyebrow">HisaabLab guides</span><h2>Read before you decide</h2></div><p>Practical explanations that connect the calculators to real household decisions.</p><a href="/blog/">Browse guides →</a></div><div class="blog-grid"><article class="blog-card"><div class="blog-art"><span>↘</span></div><div class="blog-card-content"><span class="blog-meta">Home loans · 12 min read</span><h3>Home Loan Prepayment: Should You Reduce EMI or Loan Tenure?</h3><p>How each option changes cash flow, payoff time and total interest—with a worked example.</p><a href="/blog/home-loan-prepayment-reduce-emi-or-tenure/">Read the guide →</a></div></article><article class="blog-card"><div class="blog-art"><span>⚖</span></div><div class="blog-card-content"><span class="blog-meta">Property · 13 min read</span><h3>Rent vs Buy in India: Compare the True Financial Cost</h3><p>A fair comparison of down payment, interest, rent, investment returns and holding period.</p><a href="/blog/rent-vs-buy-india/">Read the guide →</a></div></article></div></div>
+  </section>
+</BaseLayout>

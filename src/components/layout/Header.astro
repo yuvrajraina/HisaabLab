@@ -1,0 +1,31 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/calculators/', label: 'Calculators' },
+  { href: '/blog/', label: 'Guides' },
+  { href: '/about/', label: 'About' }
+];
+---
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="/" aria-label="HisaabLab home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>Hisaab<span>Lab</span></span>
+    </a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-nav"><span class="sr-only">Toggle navigation</span><i></i><i></i><i></i></button>
+    <nav id="primary-nav" aria-label="Primary navigation">
+      {links.map(link => <a href={link.href} aria-current={path === link.href || (link.href !== '/' && path.startsWith(link.href)) ? 'page' : undefined}>{link.label}</a>)}
+      <a class="nav-cta" href="/calculators/">Explore tools <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+</header>
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-button');
+  const nav = document.querySelector<HTMLElement>('#primary-nav');
+  button?.addEventListener('click', () => {
+    const open = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!open));
+    nav?.classList.toggle('open', !open);
+  });
+</script>

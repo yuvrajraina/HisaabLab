@@ -1,0 +1,17 @@
+---
+import { calculators } from '../../data/calculators';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-brand">
+      <a class="brand brand-light" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Hisaab<span>Lab</span></span></a>
+      <p>Clear, free financial calculators built for Indian households. No login. No hidden recommendation.</p>
+      <span class="footer-pill">Calculations stay in your browser</span>
+    </div>
+    <div><h2>Popular calculators</h2><ul>{calculators.slice(0,5).map(item=><li><a href={item.path}>{item.shortName}</a></li>)}</ul></div>
+    <div><h2>Plan & compare</h2><ul>{calculators.slice(5).map(item=><li><a href={item.path}>{item.shortName}</a></li>)}</ul></div>
+    <div><h2>HisaabLab</h2><ul><li><a href="/about/">About</a></li><li><a href="/blog/">Guides</a></li><li><a href="/contact/">Contact</a></li><li><a href="/privacy-policy/">Privacy</a></li><li><a href="/terms-and-conditions/">Terms</a></li><li><a href="/disclaimer/">Disclaimer</a></li></ul></div>
+  </div>
+  <div class="container footer-bottom"><p>© {year} HisaabLab. Educational estimates, not financial advice.</p><p>Made for better money conversations in India.</p></div>
+</footer>

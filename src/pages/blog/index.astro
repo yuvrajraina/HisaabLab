@@ -1,0 +1,10 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+const posts = (await getCollection('blog')).sort((a,b)=>b.data.published.valueOf()-a.data.published.valueOf());
+---
+<BaseLayout title="Money Guides for Indian Home & Loan Decisions" description="Practical HisaabLab guides about home-loan prepayment, rent vs buy and the assumptions behind major financial decisions.">
+  <section class="page-hero center"><div class="container"><Breadcrumbs items={[{label:'Home',href:'/'},{label:'Guides'}]} /><span class="eyebrow">Practical money guides</span><h1>Understand the decision, not just the answer.</h1><p class="lead">Original, calculator-backed explanations for Indian households. No rate predictions, product pitches or universal rules.</p></div></section>
+  <section class="section" style="padding-top:20px"><div class="container blog-grid">{posts.map((post,index)=><article class="blog-card"><div class="blog-art"><span>{index===0?'⚖':'↘'}</span></div><div class="blog-card-content"><span class="blog-meta">{post.data.readingMinutes} min read · Updated {post.data.updated.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span><h2>{post.data.title}</h2><p>{post.data.description}</p><a href={`/blog/${post.id}/`}>Read guide →</a></div></article>)}</div></section>
+</BaseLayout>

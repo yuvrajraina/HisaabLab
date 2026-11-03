@@ -1,0 +1,11 @@
+---
+import type { Calculator } from '../../data/calculators';
+const { calculator, featured = false } = Astro.props as { calculator: Calculator; featured?: boolean };
+---
+<a class:list={['calculator-card', { featured }]} href={calculator.path}>
+  <span class="card-icon" aria-hidden="true">{calculator.icon}</span>
+  <span class="card-category">{calculator.category}</span>
+  <h3>{calculator.shortName}</h3>
+  <p>{calculator.summary}</p>
+  <span class="card-link">Calculate now <b aria-hidden="true">→</b></span>
+</a>

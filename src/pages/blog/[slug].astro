@@ -1,0 +1,19 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import AdSlot from '../../components/advertising/AdSlot.astro';
+import { calculatorById, type CalculatorId } from '../../data/calculators';
+export async function getStaticPaths(){return (await getCollection('blog')).map(post=>({params:{slug:post.id},props:{post}}));}
+const { post }=Astro.props as {post:CollectionEntry<'blog'>};
+const { Content }=await render(post);
+const related=post.data.relatedCalculators.map(id=>calculatorById[id as CalculatorId]);
+const site=import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/,'');
+const adSlot=import.meta.env.PUBLIC_ADSENSE_ARTICLE_SLOT;
+const schema={'@context':'https://schema.org','@type':'BlogPosting',headline:post.data.title,description:post.data.description,datePublished:post.data.published.toISOString(),dateModified:post.data.updated.toISOString(),author:{'@type':'Organization',name:'HisaabLab Editorial'},publisher:{'@type':'Organization',name:'HisaabLab'},mainEntityOfPage:site?`${site}/blog/${post.id}/`:undefined};
+---
+<BaseLayout title={post.data.title} description={post.data.description} type="article" schema={schema}>
+  <header class="article-header"><div class="container"><Breadcrumbs items={[{label:'Home',href:'/'},{label:'Guides',href:'/blog/'},{label:post.data.title}]} /><span class="eyebrow">HisaabLab guide</span><h1>{post.data.title}</h1><p class="lead">{post.data.description}</p><div class="article-meta"><span>By HisaabLab Editorial</span><span>•</span><span>Published {post.data.published.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span><span>•</span><span>Updated {post.data.updated.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span><span>•</span><span>{post.data.readingMinutes} min read</span></div></div></header>
+  <AdSlot slot={adSlot} />
+  <section class="article-body"><div class="container article-layout"><article class="prose"><Content /><div class="disclaimer-box"><strong>Important</strong><p>This article provides educational estimates, not personalised financial, investment, tax or legal advice. Confirm current rules and contract terms with the relevant institution.</p></div></article><aside class="sticky-related"><div class="related-box"><h2>Use the calculators</h2>{related.map(item=><a href={item.path}><span>{item.shortName}</span><b aria-hidden="true">→</b></a>)}</div></aside></div></section>
+</BaseLayout>

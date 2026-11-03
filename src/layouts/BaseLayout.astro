@@ -1,0 +1,42 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+
+interface Props { title: string; description: string; image?: string; type?: 'website' | 'article'; noindex?: boolean; schema?: Record<string, unknown> | Array<Record<string, unknown>>; }
+const { title, description, image = '/og-default.svg', type = 'website', noindex = false, schema } = Astro.props;
+const configuredSite = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
+const canonical = configuredSite ? new URL(Astro.url.pathname, configuredSite).toString() : undefined;
+const socialImage = configuredSite ? new URL(image, configuredSite).toString() : image;
+const fullTitle = title.includes('HisaabLab') ? title : `${title} | HisaabLab`;
+const adsPublisher = import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID;
+const adsActive = import.meta.env.PUBLIC_ADS_ENABLED === 'true' && /^ca-pub-\d+$/.test(adsPublisher || '');
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex || !configuredSite ? 'noindex,follow' : 'index,follow'} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0b2b2d" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {adsActive && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsPublisher}`} crossorigin="anonymous"></script>}
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main id="main-content"><slot /></main>
+    <Footer />
+  </body>
+</html>

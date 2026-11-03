@@ -1,0 +1,8 @@
+---
+const { slot, label = 'Advertisement' } = Astro.props as { slot?: string; label?: string };
+const enabled = import.meta.env.PUBLIC_ADS_ENABLED === 'true';
+const publisher = import.meta.env.PUBLIC_ADSENSE_PUBLISHER_ID;
+const active = enabled && /^ca-pub-\d+$/.test(publisher || '') && /^\d+$/.test(slot || '');
+---
+{active && <aside class="ad-slot" aria-label={label} data-ad-slot={slot}><span>{label}</span><ins class="adsbygoogle" data-ad-client={publisher} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true"></ins></aside>}
+{active && <script is:inline>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>}

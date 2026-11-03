@@ -1,0 +1,5 @@
+---
+type Crumb = { label: string; href?: string };
+const { items } = Astro.props as { items: Crumb[] };
+---
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>{items.map((item,index)=><li>{item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}{index < items.length-1 && <b aria-hidden="true">/</b>}</li>)}</ol></nav>
