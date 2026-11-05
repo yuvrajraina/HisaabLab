@@ -17,5 +17,5 @@ export default defineConfig({
     ].includes(new URL(page).pathname)
   })] : [])],
   vite: { plugins: [tailwindcss()] },
-  build: { format: 'directory' }
+  build: { format: 'directory', inlineStylesheets: 'always' }
 });
