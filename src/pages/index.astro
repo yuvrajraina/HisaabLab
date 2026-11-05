@@ -24,7 +24,7 @@ const latestGuides=(await getCollection('blog')).sort((a,b)=>b.data.updated.valu
         <p class="lead">Free financial calculators built for India. Compare home loans, property costs and savings—with clear results and no signup.</p>
         <div class="hero-actions"><a class="button" href="/calculators/">Explore all calculators <span aria-hidden="true">→</span></a><a class="button secondary" href="/calculators/home-loan-emi/">Calculate an EMI</a></div>
         <div class="quiet-proof"><span><i></i>100% free</span><span><i></i>No login</span><span><i></i>Your inputs stay on-device</span></div>
-        <CalculatorSearch calculators={calculators} client:load />
+        <CalculatorSearch calculators={calculators} client:idle />
       </div>
       <div class="hero-visual" aria-label="Illustrative HisaabLab calculation dashboard">
         <div class="dashboard-card"><div class="dash-top"><span>Illustrative monthly EMI</span><b>Live estimate</b></div><div class="dash-value">₹43,391</div><div class="dash-sub">₹50 lakh · 8.5% · 20 years</div><div class="mini-bars" aria-hidden="true">{[32,40,48,59,68,77,86,94,100].map(height=><i style={`height:${height}%`}></i>)}</div></div>
