@@ -17,7 +17,9 @@ const schema = [
   { '@type':'FAQPage','@id':pageUrl?`${pageUrl}#faq`:undefined,mainEntity:calculator.faqs.map(item=>({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}})) }
 ];
 const related=calculator.related.map(id=>calculatorById[id]);
-const guides=(await getCollection('blog')).filter(post=>post.data.relatedCalculators.includes(calculator.id)).sort((a,b)=>b.data.updated.valueOf()-a.data.updated.valueOf()).slice(0,3);
+const guides=(await getCollection('blog'))
+  .filter(post=>post.data.relatedCalculators.includes(calculator.id))
+  .sort((a,b)=>b.data.updated.valueOf()-a.data.updated.valueOf()||a.data.title.localeCompare(b.data.title));
 const reviewed=new Date(Math.max(...references.map(ref=>new Date(ref.checked).valueOf()))).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
 const adSlot=import.meta.env.PUBLIC_ADSENSE_CALCULATOR_SLOT;
 ---
