@@ -1,6 +1,6 @@
 # HisaabLab
 
-HisaabLab is a production-oriented static financial-calculator website for Indian households. It includes ten functioning calculators, two original guides, Indian currency formatting, accessible charts, technical SEO, legal/information pages and disabled-by-default AdSense architecture.
+HisaabLab is a production-oriented static financial-calculator website for Indian households. It includes ten functioning calculators, six original guides, Indian currency formatting, accessible charts, technical SEO, legal/information pages and disabled-by-default AdSense architecture.
 
 The application has no backend, login or database. Calculator values are processed in the visitor's browser.
 
@@ -23,8 +23,9 @@ Then open `http://localhost:4321`.
 ```bash
 npm run check     # Astro and strict TypeScript checks
 npm run test      # Vitest financial-engine and registry tests
+npm run test:seo  # production build + metadata, schema, sitemap and link audit
 npm run build     # type check + static production build
-npm run verify    # tests + production build
+npm run verify    # financial tests + production SEO build and audit
 npm run preview   # serve the built dist directory
 ```
 
@@ -33,7 +34,7 @@ npm run preview   # serve the built dist directory
 Copy `.env.example` to `.env` for local production testing. Set:
 
 ```dotenv
-PUBLIC_SITE_URL=https://www.your-real-domain.in
+PUBLIC_SITE_URL=https://hisaablab.in
 PUBLIC_CONTACT_EMAIL=your-real-public-contact-address
 PUBLIC_ADS_ENABLED=false
 PUBLIC_ADSENSE_PUBLISHER_ID=
@@ -45,11 +46,11 @@ PUBLIC_ADSENSE_ARTICLE_SLOT=
 
 `PUBLIC_CONTACT_EMAIL` must be set before launch. When blank, the contact page displays an honest configuration notice rather than an invented address.
 
-## Cloudflare Pages deployment
+## Cloudflare Workers deployment
 
 1. Push this repository to GitHub.
-2. Create a Cloudflare Pages project from that repository.
-3. Select the Astro framework preset or configure:
+2. Create a Cloudflare Workers project with Builds from that repository.
+3. Configure:
    - Build command: `npm run build`
    - Build output directory: `dist`
    - Node version: `22`
@@ -57,7 +58,7 @@ PUBLIC_ADSENSE_ARTICLE_SLOT=
 5. Leave advertising variables disabled.
 6. Deploy, then verify the returned production URL, canonical tags, `robots.txt` and `sitemap-index.xml`.
 
-For a custom domain, add it in Cloudflare Pages, follow the displayed DNS instructions, wait for TLS activation, set `PUBLIC_SITE_URL` to the final canonical HTTPS origin and rebuild.
+For a custom domain, attach it to the Worker, wait for TLS activation, set `PUBLIC_SITE_URL` to the final canonical HTTPS origin and rebuild.
 
 ## Search launch
 
@@ -66,8 +67,8 @@ After the real domain is live:
 1. Verify the domain in Google Search Console using a method controlled by the site owner.
 2. Open `/robots.txt` and confirm the production sitemap URL.
 3. Submit `/sitemap-index.xml` in Search Console.
-4. Inspect the homepage, calculator directory, both articles and a sample calculator URL.
-5. Keep only one canonical hostname (for example, redirect the apex domain to `www` or the reverse).
+4. Inspect the homepage, calculator directory, guide directory and priority calculator URLs.
+5. In Cloudflare Redirect Rules, permanently redirect `http://hisaablab.in/*`, `http://www.hisaablab.in/*` and `https://www.hisaablab.in/*` to `https://hisaablab.in/${path}` while preserving the query string.
 
 No ranking, traffic or rich-result outcome is claimed.
 

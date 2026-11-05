@@ -9,11 +9,36 @@ const { post }=Astro.props as {post:CollectionEntry<'blog'>};
 const { Content }=await render(post);
 const related=post.data.relatedCalculators.map(id=>calculatorById[id as CalculatorId]);
 const site=import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/,'');
+const pageUrl=site?`${site}/blog/${post.id}/`:undefined;
 const adSlot=import.meta.env.PUBLIC_ADSENSE_ARTICLE_SLOT;
-const schema={'@context':'https://schema.org','@type':'BlogPosting',headline:post.data.title,description:post.data.description,datePublished:post.data.published.toISOString(),dateModified:post.data.updated.toISOString(),author:{'@type':'Organization',name:'HisaabLab Editorial'},publisher:{'@type':'Organization',name:'HisaabLab'},mainEntityOfPage:site?`${site}/blog/${post.id}/`:undefined};
+const schema=[
+  {
+    '@type':'BreadcrumbList',
+    '@id':pageUrl?`${pageUrl}#breadcrumb`:undefined,
+    itemListElement:[
+      {'@type':'ListItem',position:1,name:'Home',item:site?`${site}/`:undefined},
+      {'@type':'ListItem',position:2,name:'Guides',item:site?`${site}/blog/`:undefined},
+      {'@type':'ListItem',position:3,name:post.data.title}
+    ]
+  },
+  {
+    '@type':'BlogPosting',
+    '@id':pageUrl?`${pageUrl}#article`:undefined,
+    headline:post.data.title,
+    description:post.data.description,
+    image:site?`${site}/og-default.png`:undefined,
+    datePublished:post.data.published.toISOString(),
+    dateModified:post.data.updated.toISOString(),
+    author:{'@type':'Organization','@id':site?`${site}/editorial-policy/#editorial`:undefined,name:'HisaabLab Editorial',url:site?`${site}/editorial-policy/`:undefined},
+    publisher:{'@id':site?`${site}/#organization`:undefined},
+    mainEntityOfPage:{'@id':pageUrl?`${pageUrl}#webpage`:undefined},
+    isAccessibleForFree:true,
+    inLanguage:'en-IN'
+  }
+];
 ---
-<BaseLayout title={post.data.title} description={post.data.description} type="article" schema={schema}>
-  <header class="article-header"><div class="container"><Breadcrumbs items={[{label:'Home',href:'/'},{label:'Guides',href:'/blog/'},{label:post.data.title}]} /><span class="eyebrow">HisaabLab guide</span><h1>{post.data.title}</h1><p class="lead">{post.data.description}</p><div class="article-meta"><span>By HisaabLab Editorial</span><span>•</span><span>Published {post.data.published.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span><span>•</span><span>Updated {post.data.updated.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span><span>•</span><span>{post.data.readingMinutes} min read</span></div></div></header>
+<BaseLayout title={post.data.seoTitle ?? post.data.title} description={post.data.description} type="article" publishedTime={post.data.published} modifiedTime={post.data.updated} schema={schema}>
+  <header class="article-header"><div class="container"><Breadcrumbs items={[{label:'Home',href:'/'},{label:'Guides',href:'/blog/'},{label:post.data.title}]} /><span class="eyebrow">HisaabLab guide</span><h1>{post.data.title}</h1><p class="lead">{post.data.description}</p><div class="article-meta"><span>By <a href="/editorial-policy/">HisaabLab Editorial</a></span><span>•</span><span>Published <time datetime={post.data.published.toISOString()}>{post.data.published.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</time></span><span>•</span><span>Updated <time datetime={post.data.updated.toISOString()}>{post.data.updated.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</time></span><span>•</span><span>{post.data.readingMinutes} min read</span></div></div></header>
   <AdSlot slot={adSlot} />
   <section class="article-body"><div class="container article-layout"><article class="prose"><Content /><div class="disclaimer-box"><strong>Important</strong><p>This article provides educational estimates, not personalised financial, investment, tax or legal advice. Confirm current rules and contract terms with the relevant institution.</p></div></article><aside class="sticky-related"><div class="related-box"><h2>Use the calculators</h2>{related.map(item=><a href={item.path}><span>{item.shortName}</span><b aria-hidden="true">→</b></a>)}</div></aside></div></section>
 </BaseLayout>

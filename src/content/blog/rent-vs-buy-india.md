@@ -1,5 +1,6 @@
 ---
 title: "Rent vs Buy in India: How to Compare the True Financial Cost"
+seoTitle: "Rent vs Buy in India: True Cost Comparison"
 description: "A fair rent-versus-buy framework for India covering down-payment opportunity cost, loan interest, property costs, appreciation and holding period."
 published: 2026-11-03
 updated: 2026-11-03

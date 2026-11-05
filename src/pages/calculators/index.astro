@@ -4,8 +4,14 @@ import CalculatorCard from '../../components/common/CalculatorCard.astro';
 import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
 import { calculators } from '../../data/calculators';
 const categories = [...new Set(calculators.map(item=>item.category))];
+const site=import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/,'');
+const pageUrl=site?`${site}/calculators/`:undefined;
+const schema=[
+  {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:site?`${site}/`:undefined},{'@type':'ListItem',position:2,name:'Calculators'}]},
+  {'@type':'ItemList','@id':pageUrl?`${pageUrl}#calculator-list`:undefined,name:'Financial calculators for India',itemListElement:calculators.map((calculator,index)=>({'@type':'ListItem',position:index+1,name:calculator.name,url:site?`${site}${calculator.path}`:undefined}))}
+];
 ---
-<BaseLayout title="Financial Calculators for India" description="Explore 10 free calculators for home loans, affordability, rent vs buy, property appreciation and down-payment planning in India.">
+<BaseLayout title="Financial Calculators for India" description="Explore 10 free financial calculators for home loans, prepayments, affordability, rent vs buy, property costs and savings in India." schema={schema}>
   <section class="page-hero"><div class="container"><Breadcrumbs items={[{label:'Home',href:'/'},{label:'Calculators'}]} /><span class="eyebrow">10 tools · no signup</span><h1>Clear answers for consequential money decisions.</h1><p class="lead">Choose a calculator, adjust every assumption and see the maths behind the result. Your inputs are processed only in your browser.</p><div class="filter-pills">{categories.map(category=><span>{category}</span>)}</div></div></section>
   <section class="section" style="padding-top:20px"><div class="container"><div class="card-grid">{calculators.map((calculator,index)=><CalculatorCard calculator={calculator} featured={index===3||index===8} />)}</div></div></section>
 </BaseLayout>

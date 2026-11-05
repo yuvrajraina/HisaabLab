@@ -1,0 +1,14 @@
+# Permanent canonical path redirects.
+/about /about/ 301
+/blog /blog/ 301
+/calculators /calculators/ 301
+/contact /contact/ 301
+/disclaimer /disclaimer/ 301
+/editorial-policy /editorial-policy/ 301
+/privacy-policy /privacy-policy/ 301
+/terms-and-conditions /terms-and-conditions/ 301
+/blog/:slug /blog/:slug/ 301
+/calculators/:slug /calculators/:slug/ 301
+/index.html / 301
+/blog/index.html /blog/ 301
+/calculators/index.html /calculators/ 301

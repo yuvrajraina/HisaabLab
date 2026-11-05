@@ -1,5 +1,6 @@
 ---
 title: "Home Loan Prepayment: Should You Reduce EMI or Loan Tenure?"
+seoTitle: "Home Loan Prepayment: Reduce EMI or Tenure?"
 description: "A practical Indian home-loan guide to choosing a lower EMI or shorter tenure after prepayment, with a consistent worked example and lender checks."
 published: 2026-11-03
 updated: 2026-11-03

@@ -9,7 +9,10 @@ describe('calculator registry', () => {
     calculators.forEach(item => {
       expect(item.path).toBe(`/calculators/${item.id}/`);
       expect(item.title.length).toBeGreaterThan(20);
-      expect(item.description.length).toBeGreaterThan(60);
+      expect(item.title.length).toBeLessThanOrEqual(45);
+      expect(item.description.length).toBeGreaterThanOrEqual(100);
+      expect(item.description.length).toBeLessThanOrEqual(165);
+      expect(item.takeaways).toHaveLength(3);
       expect(item.fields.length).toBeGreaterThanOrEqual(3);
       expect(item.faqs.length).toBeGreaterThanOrEqual(2);
       expect(item.related.length).toBeGreaterThanOrEqual(3);

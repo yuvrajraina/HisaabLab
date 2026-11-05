@@ -2,14 +2,18 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CalculatorSearch from '../components/common/CalculatorSearch';
 import CalculatorCard from '../components/common/CalculatorCard.astro';
+import { getCollection } from 'astro:content';
 import { calculators, calculatorById } from '../data/calculators';
 
-const schema = [
-  { '@context':'https://schema.org','@type':'WebSite',name:'HisaabLab',description:'Free financial calculators built for India.',url:import.meta.env.PUBLIC_SITE_URL || undefined },
-  { '@context':'https://schema.org','@type':'Organization',name:'HisaabLab',url:import.meta.env.PUBLIC_SITE_URL || undefined }
-];
+const site=import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/,'');
+const schema={
+  '@type':'ItemList',
+  name:'HisaabLab financial calculators',
+  itemListElement:calculators.map((calculator,index)=>({'@type':'ListItem',position:index+1,name:calculator.name,url:site?`${site}${calculator.path}`:undefined}))
+};
 const popular = calculators.slice(0,6);
 const decisions = ['home-loan-prepayment','rent-vs-buy','home-affordability'].map(id => calculatorById[id as keyof typeof calculatorById]);
+const latestGuides=(await getCollection('blog')).sort((a,b)=>b.data.updated.valueOf()-a.data.updated.valueOf()).slice(0,3);
 ---
 <BaseLayout title="HisaabLab — Free Financial Calculators for India" description="Compare home loans, prepayments, rent vs buy, property costs and savings with clear, private financial calculators built for India." schema={schema}>
   <section class="hero">
@@ -42,6 +46,6 @@ const decisions = ['home-loan-prepayment','rent-vs-buy','home-affordability'].ma
   </section>
 
   <section class="section" style="background:#fff">
-    <div class="container"><div class="section-heading"><div><span class="eyebrow">HisaabLab guides</span><h2>Read before you decide</h2></div><p>Practical explanations that connect the calculators to real household decisions.</p><a href="/blog/">Browse guides →</a></div><div class="blog-grid"><article class="blog-card"><div class="blog-art"><span>↘</span></div><div class="blog-card-content"><span class="blog-meta">Home loans · 12 min read</span><h3>Home Loan Prepayment: Should You Reduce EMI or Loan Tenure?</h3><p>How each option changes cash flow, payoff time and total interest—with a worked example.</p><a href="/blog/home-loan-prepayment-reduce-emi-or-tenure/">Read the guide →</a></div></article><article class="blog-card"><div class="blog-art"><span>⚖</span></div><div class="blog-card-content"><span class="blog-meta">Property · 13 min read</span><h3>Rent vs Buy in India: Compare the True Financial Cost</h3><p>A fair comparison of down payment, interest, rent, investment returns and holding period.</p><a href="/blog/rent-vs-buy-india/">Read the guide →</a></div></article></div></div>
+    <div class="container"><div class="section-heading"><div><span class="eyebrow">HisaabLab guides</span><h2>Read before you decide</h2></div><p>Practical explanations that connect the calculators to real household decisions.</p><a href="/blog/">Browse all guides →</a></div><div class="blog-grid home-guides">{latestGuides.map((post,index)=><article class="blog-card"><div class="blog-art"><span>{['↘','⌂','⇄'][index]??'₹'}</span></div><div class="blog-card-content"><span class="blog-meta">{post.data.readingMinutes} min read · Updated {post.data.updated.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span><h3>{post.data.title}</h3><p>{post.data.description}</p><a href={`/blog/${post.id}/`}>Read the guide →</a></div></article>)}</div></div>
   </section>
 </BaseLayout>
