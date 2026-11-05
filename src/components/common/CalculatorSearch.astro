@@ -1,0 +1,95 @@
+---
+import type { Calculator } from '../../data/calculators';
+
+interface Props {
+  calculators: Calculator[];
+}
+
+const { calculators } = Astro.props;
+const searchItems = calculators.map(({ id, path, icon, shortName, summary, name, category }) => ({
+  id,
+  path,
+  icon,
+  shortName,
+  summary,
+  searchText: `${name} ${summary} ${category}`.toLowerCase()
+}));
+const initialResults = searchItems.slice(0, 5);
+---
+
+<div class="calculator-search" data-calculator-search data-calculators={JSON.stringify(searchItems)}>
+  <label for="calculator-search">Find the right calculator</label>
+  <div class="search-input">
+    <span aria-hidden="true">⌕</span>
+    <input id="calculator-search" placeholder="Try “prepayment” or “rent vs buy”" autocomplete="off" />
+  </div>
+  <div class="search-results" aria-live="polite">
+    {initialResults.map(item => (
+      <a href={item.path}>
+        <span class="mini-icon">{item.icon}</span>
+        <span><strong>{item.shortName}</strong><small>{item.summary}</small></span>
+        <b aria-hidden="true">→</b>
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  type SearchItem = {
+    id: string;
+    path: string;
+    icon: string;
+    shortName: string;
+    summary: string;
+    searchText: string;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-calculator-search]').forEach(root => {
+    const input = root.querySelector<HTMLInputElement>('input');
+    const results = root.querySelector<HTMLElement>('.search-results');
+    const items = JSON.parse(root.dataset.calculators ?? '[]') as SearchItem[];
+    if (!input || !results) return;
+
+    const render = (matches: SearchItem[]) => {
+      results.replaceChildren();
+
+      if (matches.length === 0) {
+        const message = document.createElement('p');
+        message.textContent = 'No exact match. Browse all calculators instead.';
+        results.append(message);
+        return;
+      }
+
+      matches.forEach(item => {
+        const link = document.createElement('a');
+        link.href = item.path;
+
+        const icon = document.createElement('span');
+        icon.className = 'mini-icon';
+        icon.textContent = item.icon;
+
+        const copy = document.createElement('span');
+        const name = document.createElement('strong');
+        name.textContent = item.shortName;
+        const summary = document.createElement('small');
+        summary.textContent = item.summary;
+        copy.append(name, summary);
+
+        const arrow = document.createElement('b');
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+
+        link.append(icon, copy, arrow);
+        results.append(link);
+      });
+    };
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim().toLowerCase();
+      const matches = query
+        ? items.filter(item => item.searchText.includes(query)).slice(0, 6)
+        : items.slice(0, 5);
+      render(matches);
+    });
+  });
+</script>
