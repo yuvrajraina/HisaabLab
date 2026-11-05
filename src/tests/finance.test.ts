@@ -12,6 +12,22 @@ describe('loan mathematics', () => {
     expect(emi(5_000_000, 8.5, 240)).toBeCloseTo(43_391.17, 1);
   });
 
+  it('matches the published 15, 20, 25 and 30-year tenure comparison', () => {
+    const principal = 5_000_000;
+    const scenarios = [
+      { months: 180, monthlyPayment: 49_237, totalInterest: 3_862_656 },
+      { months: 240, monthlyPayment: 43_391, totalInterest: 5_413_879 },
+      { months: 300, monthlyPayment: 40_261, totalInterest: 7_078_406 },
+      { months: 360, monthlyPayment: 38_446, totalInterest: 8_840_443 }
+    ];
+
+    for (const scenario of scenarios) {
+      const payment = emi(principal, 8.5, scenario.months);
+      expect(Math.round(payment)).toBe(scenario.monthlyPayment);
+      expect(Math.round(payment * scenario.months - principal)).toBe(scenario.totalInterest);
+    }
+  });
+
   it('amortises to approximately zero and reconciles cash flows', () => {
     const principal = 2_500_000; const payment = emi(principal, 7.75, 180);
     const rows = amortize(principal, 7.75, 180, payment);
