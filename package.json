@@ -10,6 +10,7 @@
     "check": "astro check",
     "test": "vitest run",
     "test:seo": "node scripts/seo-audit.mjs --build",
+    "seo:indexnow": "npm run test:seo && node scripts/submit-indexnow.mjs",
     "test:watch": "vitest",
     "lint": "astro check",
     "ads:generate": "node scripts/generate-ads-txt.mjs",

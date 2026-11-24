@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { INDEXNOW_KEY, INDEXNOW_KEY_FILE } from './indexnow-config.mjs';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distRoot = join(projectRoot, 'dist');
@@ -119,6 +120,11 @@ for (const file of htmlFiles) {
 }
 
 assert(existsSync(join(distRoot, 'og-default.png')), 'Raster social card is missing from dist.');
+const indexNowKeyPath = join(distRoot, INDEXNOW_KEY_FILE);
+assert(existsSync(indexNowKeyPath), 'IndexNow verification file is missing from dist.');
+if (existsSync(indexNowKeyPath)) {
+  assert(readFileSync(indexNowKeyPath, 'utf8').trim() === INDEXNOW_KEY, 'IndexNow verification file does not match the configured key.');
+}
 
 if (failures.length > 0) {
   console.error(`SEO audit failed with ${failures.length} issue(s):`);

@@ -1,6 +1,6 @@
 # HisaabLab
 
-HisaabLab is a production-oriented static financial-calculator website for Indian households. It includes ten functioning calculators, six original guides, Indian currency formatting, accessible charts, technical SEO, legal/information pages and disabled-by-default AdSense architecture.
+HisaabLab is a production-oriented static financial-calculator website for Indian households. It includes ten functioning calculators, seven original guides, Indian currency formatting, accessible charts, technical SEO, legal/information pages and disabled-by-default AdSense architecture.
 
 The application has no backend, login or database. Calculator values are processed in the visitor's browser.
 
@@ -24,6 +24,7 @@ Then open `http://localhost:4321`.
 npm run check     # Astro and strict TypeScript checks
 npm run test      # Vitest financial-engine and registry tests
 npm run test:seo  # production build + metadata, schema, sitemap and link audit
+npm run seo:indexnow # verified production build + IndexNow URL submission
 npm run build     # type check + static production build
 npm run verify    # financial tests + production SEO build and audit
 npm run preview   # serve the built dist directory
@@ -69,6 +70,7 @@ After the real domain is live:
 3. Submit `/sitemap-index.xml` in Search Console.
 4. Inspect the homepage, calculator directory, guide directory and priority calculator URLs.
 5. In Cloudflare Redirect Rules, permanently redirect `http://hisaablab.in/*`, `http://www.hisaablab.in/*` and `https://www.hisaablab.in/*` to `https://hisaablab.in/${path}` while preserving the query string.
+6. Run `npm run seo:indexnow` after publishing new or materially updated URLs to notify Bing and other participating search engines.
 
 No ranking, traffic or rich-result outcome is claimed.
 
